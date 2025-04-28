@@ -1,5 +1,5 @@
 diff --git a/dist/rules/no-internal.js b/dist/rules/no-internal.js
-index 104333775794c4f5d6d850ded1331efcf4d82653..04bfa093f0d3a143332c4336cc4b54b5b173ca56 100644
+index 104333775794c4f5d6d850ded1331efcf4d82653..8ab144104b4102460714230c98fda31ae50a76ed 100644
 --- a/dist/rules/no-internal.js
 +++ b/dist/rules/no-internal.js
 @@ -168,7 +168,7 @@ module.exports = {
@@ -20,13 +20,22 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..04bfa093f0d3a143332c4336cc4b54b5
 +
 +        for (const arg of tsCall.arguments) {
 +          const argType = typeChecker.getTypeAtLocation(arg);
-+          if (argType && argType.symbol) {
++          if (argType) {
 +            checkWithParent(argType.symbol.valueDeclaration, node);
 +          }
 +        }
        },
  
        NewExpression(node) {
+@@ -239,7 +248,7 @@ module.exports = {
+           return;
+ 
+         const resolvedClass = typeChecker.getTypeAtLocation(tsCall);
+-        if (resolvedClass && resolvedClass.symbol)
++        if (resolvedClass)
+           checkWithParent(resolvedClass.symbol.valueDeclaration, node);
+ 
+         const resolvedConstructor = typeChecker.getResolvedSignature(tsCall);
 @@ -294,13 +303,52 @@ module.exports = {
        },
  
@@ -37,7 +46,7 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..04bfa093f0d3a143332c4336cc4b54b5
 +        if (!tsNode) return;
 +
 +        const resolvedType = typeChecker.getTypeAtLocation(tsNode);
-+        if (resolvedType && resolvedType.symbol) {
++        if (resolvedType) {
 +          checkWithParent(resolvedType.symbol.valueDeclaration, node);
 +        }
 +      },
@@ -49,7 +58,7 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..04bfa093f0d3a143332c4336cc4b54b5
 +        for (const clause of tsNode.heritageClauses) {
 +          for (const type of clause.types) {
 +            const resolvedType = typeChecker.getTypeAtLocation(type.expression);
-+            if (resolvedType && resolvedType.symbol) {
++            if (resolvedType) {
 +              checkWithParent(resolvedType.symbol.valueDeclaration, node);
 +            }
 +          }
@@ -65,7 +74,7 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..04bfa093f0d3a143332c4336cc4b54b5
 -        if (resolved)
 -          checkWithParent(resolved.declaration, node);
 +        const resolvedType = typeChecker.getTypeAtLocation(tsNode.right);
-+        if (resolvedType && resolvedType.symbol) {
++        if (resolvedType) {
 +          checkWithParent(resolvedType.symbol.valueDeclaration, node);
 +        }
 +      },
