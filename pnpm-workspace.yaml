@@ -1,0 +1,2 @@
+patchedDependencies:
+  '@itwin/eslint-plugin@5.1.0': patches/@itwin__eslint-plugin@5.1.0.patch
