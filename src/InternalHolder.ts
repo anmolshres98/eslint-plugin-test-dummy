@@ -13,3 +13,8 @@ export class Public {
   /** @internal */
   public internalMethod(): void {};
 }
+
+/**
+ * Test to check linting rules are working properly
+ */
+const unusedVar = 1;
