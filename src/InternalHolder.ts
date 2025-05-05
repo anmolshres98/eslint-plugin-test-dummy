@@ -14,6 +14,12 @@ export class Public {
   public internalMethod(): void {};
 }
 
+/** @notinternal */
+export class NotInternal {}
+
+/** @internal */
+export const internalVariable = "a";
+
 /**
  * Test to check linting rules are working properly
  */

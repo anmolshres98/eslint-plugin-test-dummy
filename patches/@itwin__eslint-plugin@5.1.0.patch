@@ -1,17 +1,93 @@
 diff --git a/dist/rules/no-internal.js b/dist/rules/no-internal.js
-index 104333775794c4f5d6d850ded1331efcf4d82653..8ab144104b4102460714230c98fda31ae50a76ed 100644
+index 104333775794c4f5d6d850ded1331efcf4d82653..bbdaa48234b8263a90c7e5616476a92c1d8f6908 100644
 --- a/dist/rules/no-internal.js
 +++ b/dist/rules/no-internal.js
-@@ -168,7 +168,7 @@ module.exports = {
-       for (const jsDoc of declaration.jsDoc) {
-         if (jsDoc.tags) {
-           for (const tag of jsDoc.tags) {
+@@ -26,6 +26,7 @@ const syntaxKindFriendlyNames = {
+   [ts.SyntaxKind.PropertySignature]: "property",
+   [ts.SyntaxKind.Constructor]: "constructor",
+   [ts.SyntaxKind.EnumMember]: "enum member",
++  [ts.SyntaxKind.VariableDeclaration]: "variable",
+ }
+ 
+ /**
+@@ -162,42 +163,45 @@ module.exports = {
+     }
+ 
+     function checkJsDoc(declaration, node) {
+-      if (!declaration || !declaration.jsDoc)
++      if (!declaration)
+         return undefined;
+ 
+-      for (const jsDoc of declaration.jsDoc) {
+-        if (jsDoc.tags) {
+-          for (const tag of jsDoc.tags) {
 -            if (!bannedTags.includes(tag.tagName.escapedText) || !isCheckedFile(declaration)) {
-+            if (!bannedTags.includes(tag.tagName.escapedText)) {
-               continue;
-             }
-             //Violation key to track and report violations on a per-usage basis
-@@ -231,6 +231,15 @@ module.exports = {
+-              continue;
+-            }
+-            //Violation key to track and report violations on a per-usage basis
+-            const violationKey = `${declaration.kind}_${declaration.symbol.escapedName}_${tag}_${node.range[0]}`;
+-            if (reportedViolationsSet.has(violationKey)) {
+-              continue;
+-            }
+-            reportedViolationsSet.add(violationKey);
+-            let name;
+-            if (declaration.kind === ts.SyntaxKind.Constructor)
+-              name = declaration.parent.symbol.escapedName;
+-            else {
+-              name = declaration.symbol.escapedName;
+-              const parentSymbol = getParentSymbolName(declaration);
+-              if (parentSymbol)
+-                name = `${parentSymbol}.${name}`;
+-            }
++      // Use TypeScript's utility to get JSDoc tags
++      const jsDocTags = ts.getJSDocTags(declaration);
++      if (!jsDocTags || jsDocTags.length === 0) return;
+ 
+-            context.report({
+-              node,
+-              messageId: "forbidden",
+-              data: {
+-                kind: syntaxKindFriendlyNames.hasOwnProperty(declaration.kind) ? syntaxKindFriendlyNames[declaration.kind] : "unknown object type " + declaration.kind,
+-                name,
+-                tag: tag.tagName.escapedText,
+-              }
+-            });
++      for (const tag of jsDocTags) {
++        if (!bannedTags.includes(tag.tagName.escapedText)) {
++          continue;
++        }
++
++        // Violation key to track and report violations on a per-usage basis
++        const violationKey = `${declaration.kind}_${declaration.symbol?.escapedName}_${tag.tagName.text}_${node.range[0]}`;
++        if (reportedViolationsSet.has(violationKey)) {
++          continue;
++        }
++        reportedViolationsSet.add(violationKey);
++
++        let name;
++        if (declaration.kind === ts.SyntaxKind.Constructor) {
++          name = declaration.parent.symbol.escapedName;
++        } else {
++          name = declaration.symbol?.escapedName;
++          const parentSymbol = getParentSymbolName(declaration);
++          if (parentSymbol) {
++            name = `${parentSymbol}.${name}`;
+           }
+         }
++
++        context.report({
++          node,
++          messageId: "forbidden",
++          data: {
++            kind: syntaxKindFriendlyNames.hasOwnProperty(declaration.kind) ? syntaxKindFriendlyNames[declaration.kind] : "unknown object type " + declaration.kind,
++            name,
++            tag: tag.tagName.escapedText,
++          }
++        });
+       }
+     }
+ 
+@@ -231,6 +235,15 @@ module.exports = {
          const resolvedSymbol = typeChecker.getSymbolAtLocation(tsCall.expression);
          if (resolvedSymbol)
            checkWithParent(resolvedSymbol.valueDeclaration, node);
@@ -27,7 +103,7 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..8ab144104b4102460714230c98fda31a
        },
  
        NewExpression(node) {
-@@ -239,7 +248,7 @@ module.exports = {
+@@ -239,7 +252,7 @@ module.exports = {
            return;
  
          const resolvedClass = typeChecker.getTypeAtLocation(tsCall);
@@ -36,7 +112,7 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..8ab144104b4102460714230c98fda31a
            checkWithParent(resolvedClass.symbol.valueDeclaration, node);
  
          const resolvedConstructor = typeChecker.getResolvedSignature(tsCall);
-@@ -294,13 +303,52 @@ module.exports = {
+@@ -294,13 +307,60 @@ module.exports = {
        },
  
        TSTypeReference(node) {
@@ -84,12 +160,20 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..8ab144104b4102460714230c98fda31a
 +        if (!tsNode) return;
 +
 +        const resolvedModule = typeChecker.getSymbolAtLocation(tsNode.moduleSpecifier);
-+        if (resolvedModule && resolvedModule.exports) {
-+          resolvedModule.exports.forEach((exportSymbol) => {
-+            if (exportSymbol.valueDeclaration) {
-+              checkWithParent(exportSymbol.valueDeclaration, node);
++        if (!resolvedModule || !resolvedModule.exports) return;
++
++        // Iterate over the named imports and default import
++        if (node.specifiers) {
++          for (const specifier of node.specifiers) {
++            if (specifier.type === "ImportSpecifier" || specifier.type === "ImportDefaultSpecifier" || specifier.type === "ImportNamespaceSpecifier") {
++              const importedName = specifier.local.name;
++              const exportSymbol = resolvedModule.exports.get(importedName);
++
++              if (exportSymbol && exportSymbol.valueDeclaration) {
++                checkWithParent(exportSymbol.valueDeclaration, specifier);
++              }
 +            }
-+          });
++          }
 +        }
        },
      };
