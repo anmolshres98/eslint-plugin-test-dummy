@@ -21,6 +21,12 @@ export class NotInternal {}
 export const internalVariable = "a";
 
 /**
+ * This should not be caught
+ * @internal
+ */
+export class OtherInternal { }
+
+/**
  * Test to check linting rules are working properly
  */
 const unusedVar = 1;
