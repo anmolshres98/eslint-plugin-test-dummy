@@ -12,3 +12,12 @@ new NotInternal();
 import { internalVariable } from "./InternalHolder";
 
 const _anotherUnusedVar = internalVariable;
+
+import * as InternalHolder from "./InternalHolder"; 
+InternalHolder.internalVariable;
+InternalHolder.Internal
+InternalHolder.Public;
+
+import { Internal as Internal2 } from "./InternalHolder"; 
+
+new Internal2();

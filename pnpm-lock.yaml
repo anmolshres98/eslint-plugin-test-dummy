@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@itwin/eslint-plugin@5.1.0':
-    hash: 297ac0f2d67ae1310a9de39fe4e8bd70d74bf27228d2b8432de1d0d435758601
+    hash: b841b7bfc89e7507db4fa8ad25938d5b947946d999aaa14b1b3d014a2f5b35b6
     path: patches/@itwin__eslint-plugin@5.1.0.patch
 
 importers:
@@ -15,7 +15,7 @@ importers:
     devDependencies:
       '@itwin/eslint-plugin':
         specifier: ^5.1.0
-        version: 5.1.0(patch_hash=297ac0f2d67ae1310a9de39fe4e8bd70d74bf27228d2b8432de1d0d435758601)(eslint@9.24.0)(typescript@5.8.3)
+        version: 5.1.0(patch_hash=b841b7bfc89e7507db4fa8ad25938d5b947946d999aaa14b1b3d014a2f5b35b6)(eslint@9.24.0)(typescript@5.8.3)
       eslint:
         specifier: ^9.24.0
         version: 9.24.0
@@ -1257,7 +1257,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.2': {}
 
-  '@itwin/eslint-plugin@5.1.0(patch_hash=297ac0f2d67ae1310a9de39fe4e8bd70d74bf27228d2b8432de1d0d435758601)(eslint@9.24.0)(typescript@5.8.3)':
+  '@itwin/eslint-plugin@5.1.0(patch_hash=b841b7bfc89e7507db4fa8ad25938d5b947946d999aaa14b1b3d014a2f5b35b6)(eslint@9.24.0)(typescript@5.8.3)':
     dependencies:
       '@typescript-eslint/eslint-plugin': 8.29.1(@typescript-eslint/parser@8.29.1(eslint@9.24.0)(typescript@5.8.3))(eslint@9.24.0)(typescript@5.8.3)
       '@typescript-eslint/parser': 8.29.1(eslint@9.24.0)(typescript@5.8.3)

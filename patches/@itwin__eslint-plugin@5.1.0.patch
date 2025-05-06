@@ -1,5 +1,5 @@
 diff --git a/dist/rules/no-internal.js b/dist/rules/no-internal.js
-index 104333775794c4f5d6d850ded1331efcf4d82653..bbdaa48234b8263a90c7e5616476a92c1d8f6908 100644
+index 104333775794c4f5d6d850ded1331efcf4d82653..411956e00a919d36775ab5f9ee1ad5d7ff2600bc 100644
 --- a/dist/rules/no-internal.js
 +++ b/dist/rules/no-internal.js
 @@ -26,6 +26,7 @@ const syntaxKindFriendlyNames = {
@@ -166,7 +166,7 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..bbdaa48234b8263a90c7e5616476a92c
 +        if (node.specifiers) {
 +          for (const specifier of node.specifiers) {
 +            if (specifier.type === "ImportSpecifier" || specifier.type === "ImportDefaultSpecifier" || specifier.type === "ImportNamespaceSpecifier") {
-+              const importedName = specifier.local.name;
++              const importedName = specifier.imported?.name || specifier.local.name;
 +              const exportSymbol = resolvedModule.exports.get(importedName);
 +
 +              if (exportSymbol && exportSymbol.valueDeclaration) {
