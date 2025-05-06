@@ -1,5 +1,5 @@
 diff --git a/dist/rules/no-internal.js b/dist/rules/no-internal.js
-index 104333775794c4f5d6d850ded1331efcf4d82653..411956e00a919d36775ab5f9ee1ad5d7ff2600bc 100644
+index 104333775794c4f5d6d850ded1331efcf4d82653..0f9322e913961027fbda62c18f44136cd43a2d52 100644
 --- a/dist/rules/no-internal.js
 +++ b/dist/rules/no-internal.js
 @@ -26,6 +26,7 @@ const syntaxKindFriendlyNames = {
@@ -112,7 +112,7 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..411956e00a919d36775ab5f9ee1ad5d7
            checkWithParent(resolvedClass.symbol.valueDeclaration, node);
  
          const resolvedConstructor = typeChecker.getResolvedSignature(tsCall);
-@@ -294,13 +307,60 @@ module.exports = {
+@@ -294,13 +307,64 @@ module.exports = {
        },
  
        TSTypeReference(node) {
@@ -162,12 +162,16 @@ index 104333775794c4f5d6d850ded1331efcf4d82653..411956e00a919d36775ab5f9ee1ad5d7
 +        const resolvedModule = typeChecker.getSymbolAtLocation(tsNode.moduleSpecifier);
 +        if (!resolvedModule || !resolvedModule.exports) return;
 +
-+        // Iterate over the named imports and default import
 +        if (node.specifiers) {
 +          for (const specifier of node.specifiers) {
 +            if (specifier.type === "ImportSpecifier" || specifier.type === "ImportDefaultSpecifier" || specifier.type === "ImportNamespaceSpecifier") {
-+              const importedName = specifier.imported?.name || specifier.local.name;
-+              const exportSymbol = resolvedModule.exports.get(importedName);
++              let exportSymbol;
++              if (specifier.type === "ImportDefaultSpecifier") {
++                exportSymbol = typeChecker.getAliasedSymbol(resolvedModule.exports.get("default")); 
++              }
++              else {
++                exportSymbol = resolvedModule.exports.get(specifier.imported?.name);
++              }
 +
 +              if (exportSymbol && exportSymbol.valueDeclaration) {
 +                checkWithParent(exportSymbol.valueDeclaration, specifier);

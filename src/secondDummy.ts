@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-duplicate-imports */
 /* eslint-disable sort-imports */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -21,3 +22,5 @@ InternalHolder.Public;
 import { Internal as Internal2 } from "./InternalHolder"; 
 
 new Internal2();
+
+import internalVariable from "./InternalHolder"

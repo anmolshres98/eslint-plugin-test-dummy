@@ -30,3 +30,5 @@ export class OtherInternal { }
  * Test to check linting rules are working properly
  */
 const unusedVar = 1;
+
+export default internalVariable;
