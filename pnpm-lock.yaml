@@ -4,18 +4,13 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  '@itwin/eslint-plugin@5.1.0':
-    hash: f80f83beec06f0ab3dcca9a51489e505e57484857d9172a90ba45f40be9a10c4
-    path: patches/@itwin__eslint-plugin@5.1.0.patch
-
 importers:
 
   .:
     devDependencies:
       '@itwin/eslint-plugin':
-        specifier: ^5.1.0
-        version: 5.1.0(patch_hash=f80f83beec06f0ab3dcca9a51489e505e57484857d9172a90ba45f40be9a10c4)(eslint@9.24.0)(typescript@5.8.3)
+        specifier: ^5.2.0
+        version: 5.2.0(eslint@9.24.0)(typescript@5.8.3)
       eslint:
         specifier: ^9.24.0
         version: 9.24.0
@@ -91,8 +86,8 @@ packages:
     resolution: {integrity: sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==}
     engines: {node: '>=18.18'}
 
-  '@itwin/eslint-plugin@5.1.0':
-    resolution: {integrity: sha512-hGpVdlHlStuZmMGBKQ2KwsjLkTMl+sBCTrRy9fMSpwIa4kX/TxeQuifZyTM8bzhXEd9I4G8weOpYR0HU9MX+ug==}
+  '@itwin/eslint-plugin@5.2.0':
+    resolution: {integrity: sha512-U1uGny0F89YN2cyN5Uc/4EmzRfC/ZxcvFRu+jaKdC3WJUj/FcJw/PDasHjhF33D//mTQgu0HR/HjtO7ov/y36Q==}
     engines: {node: ^18.18.0 || ^20.0.0 || ^22.0.0}
     hasBin: true
     peerDependencies:
@@ -1257,7 +1252,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.2': {}
 
-  '@itwin/eslint-plugin@5.1.0(patch_hash=f80f83beec06f0ab3dcca9a51489e505e57484857d9172a90ba45f40be9a10c4)(eslint@9.24.0)(typescript@5.8.3)':
+  '@itwin/eslint-plugin@5.2.0(eslint@9.24.0)(typescript@5.8.3)':
     dependencies:
       '@typescript-eslint/eslint-plugin': 8.29.1(@typescript-eslint/parser@8.29.1(eslint@9.24.0)(typescript@5.8.3))(eslint@9.24.0)(typescript@5.8.3)
       '@typescript-eslint/parser': 8.29.1(eslint@9.24.0)(typescript@5.8.3)
